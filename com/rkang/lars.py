@@ -9,16 +9,15 @@ AGE	SEX  BMI	 BP	 TC	 LDL	HDL	TCH  LTG	GLU	 Y
 """
 import numpy as np
 from sklearn import preprocessing
+from sklearn import linear_model
 #加载数据，去掉表头
 diabetes = np.loadtxt("e:/diabetes.npy")
 #加载变量数据
 data = diabetes[:, :-1]
 #加载目标数据（第二年血糖值）
 target = diabetes[..., -1]
-print(data)
 #对数据进行中心化和标准化
 X_scaled = preprocessing.scale(diabetes)
-print(X_scaled)
 # print(X_scaled.mean(axis=0)) # 平均值
 # print(X_scaled.std(axis=0))  # 方差
 
@@ -26,5 +25,36 @@ print(X_scaled)
 coef = np.corrcoef(X_scaled.T)
 #各个变量针对Y（第2年血糖）值的相关系统
 coef_y = coef[..., -1]
-for i in coef_y:
-    print("{0:.7f}".format(i))
+print("各个因子对第二年血糖的相关系数")
+titles = ['年龄-X1','性别-X2','BMI-X3','平均血压-X4','TC总胆固醇-X5','LDL低密度脂蛋白-X6','HDL高密度脂蛋白-X7','TCH总胆固醇-X8','LTG甘油三酯-X9','GLU血糖-X10','第二年血糖']
+for key,value in zip(titles,coef_y):
+    print(key,':',"{0:.7f}".format(value))
+
+
+print(X_scaled)
+X_data = X_scaled[:,[2,8,3,6,9]]
+y_data = target
+
+print(X_data)
+print(y_data)
+
+reg = linear_model.LinearRegression(fit_intercept=True)
+reg.fit(X_data,y_data)
+print('线性回归方程对应的系数:',reg.coef_)
+print('线性回归方程对应的截距:',reg.intercept_)
+
+y_pre = reg.predict(X_data)
+
+print(y_pre[-10:])
+print(y_data[-10:])
+
+
+
+
+
+
+
+
+
+
+

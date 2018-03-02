@@ -17,7 +17,7 @@ y = diabetes.target
 print("Computing regularization path using the LARS ...")
 alphas, active, coefs = linear_model.lars_path(X, y, method='lar', verbose=True,return_path=True)
 print(coefs)
-print(active)
+print(np.add(active,1))
 xx = np.sum(np.abs(coefs.T), axis=1)
 print(xx)
 xx /= xx[-1]
